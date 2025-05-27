@@ -7,6 +7,7 @@ Pizza pizza = new Pizza();
 ActualPizza pizzaOrder = new ActualPizza();
 int orderNumber = 1;
 int clickedShape = 0; // 0: nothing, 1: circle, 2: square
+boolean sauceClicked = false;
 
 void setup() {
   size(1050, 700);
@@ -42,7 +43,7 @@ void setup() {
 }
 
 void mousePressed() {
-  if (mouseX>350 && mouseX < 650 && mouseY>450 && mouseY<500) {
+  if (currentStation ==-1 && mouseX>350 && mouseX < 650 && mouseY>450 && mouseY<500) {
       pressed = true;
       startTime = millis();
       currentStation = 0;
@@ -56,8 +57,14 @@ void mousePressed() {
         pizzaOrder.setDoughShape("sicilian");
         print("i clicked");
       }
+  }
+  if (currentStation==1) {
+    if (mouseX>40 && mouseX<240 && mouseY>100 && mouseY<300) {
+      sauceClicked = true;
     }
+  }
 }
+
 
 void draw() {
   if (pressed) {
@@ -72,16 +79,21 @@ void draw() {
     fill(0);
     text(nf(minutes, 2) + ":" + nf(seconds, 2), width/2 - 45, 63);
     
-    if (pizzaOrder.getDoughShape().equals("circular") && clickedShape != 1) {
-      //allStations[currentStation].prepare();
+    if ((pizzaOrder.getDoughShape().equals("circular") && clickedShape != 1 && currentStation==0) || (pizzaOrder.getDoughShape().equals("circular") && currentStation != 0)) {
+      allStations[currentStation].prepare();
+      fill(#E3E5D5);
       circle(500, 400, 500);
-      print("shape made");
       clickedShape = 1;
     }
-    else if (pizzaOrder.getDoughShape().equals("sicilian") && clickedShape != 2) {
-      //allStations[currentStation].prepare();
+    else if ((pizzaOrder.getDoughShape().equals("sicilian") && clickedShape != 2 && currentStation==0) || (pizzaOrder.getDoughShape().equals("sicilian") && currentStation != 0)) {
+      allStations[currentStation].prepare();
+      fill(#E3E5D5);
       square(250, 150, 500);
       clickedShape = 2;
+    }
+    
+    if (currentStation == 1 && sauceClicked) {
+      image(loadImage("sauceOnPizza.png"), 280, 180, 450, 450);
     }
   }
 }
