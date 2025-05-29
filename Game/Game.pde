@@ -62,6 +62,21 @@ void mousePressed() {
     if (mouseX>40 && mouseX<240 && mouseY>100 && mouseY<300) {
       sauceClicked = true;
     }
+    if (mouseX>35 && mouseX<210 && mouseY>345 && mouseY<400) {
+      pizzaOrder.setCheeseType("mozzarella");
+    }
+    if (mouseX>35 && mouseX<210 && mouseY>405 && mouseY<460) {
+      pizzaOrder.setCheeseType("provolone");
+    }
+    if (mouseX>35 && mouseX<210 && mouseY>465 && mouseY<520) {
+      pizzaOrder.setCheeseType("parmesan");
+    }
+    if (mouseX>35 && mouseX<210 && mouseY>525 && mouseY<580) {
+      pizzaOrder.setCheeseType("ricotta");
+    }
+    if (mouseX>35 && mouseX<210 && mouseY>585 && mouseY<640) {
+      pizzaOrder.setCheeseType("cheddar");
+    }
   }
 }
 
@@ -82,19 +97,34 @@ void draw() {
     if ((pizzaOrder.getDoughShape().equals("circular") && clickedShape != 1 && currentStation==0) || (pizzaOrder.getDoughShape().equals("circular") && currentStation != 0)) {
       allStations[currentStation].prepare();
       fill(#E3E5D5);
+      noStroke();
       circle(500, 400, 500);
       clickedShape = 1;
     }
     else if ((pizzaOrder.getDoughShape().equals("sicilian") && clickedShape != 2 && currentStation==0) || (pizzaOrder.getDoughShape().equals("sicilian") && currentStation != 0)) {
       allStations[currentStation].prepare();
       fill(#E3E5D5);
+      noStroke();
       square(250, 150, 500);
       clickedShape = 2;
     }
 
     if (currentStation == 1 && sauceClicked) {
-      image(loadImage("sauceOnPizza.png"), 280, 180, 450, 450);
+      if (sauceClicked) {
+        tint(255, 255);
+        image(loadImage("sauceOnPizza.png"), 280, 180, 450, 450);
+      }
+      print(pizzaOrder.getCheeseType());
+      if (pizzaOrder.getCheeseType().equals("cheddar")) {
+        image(loadImage("cheddarOnPizza.png"), 260, 170, 475, 475);
+      }
+      else {
+        tint(200);
+        image(loadImage("cheddarOnPizza.png"), 260, 170, 475, 475);
+      }
     }
+    
+    
   }
 }
 

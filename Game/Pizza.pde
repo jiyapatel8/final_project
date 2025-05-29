@@ -86,18 +86,23 @@ class Pizza {
   }
   
   public void addTopping(String topping) {
+    
   }
   
   public void setOvenTime(int time) {
+    ovenTime = time;
   }
   
   public void setTemperature(int temp) {
+    temperature = temp;
   }
   
   public void addCheeseAmount(int amt) {
+    cheeseAmount = amt;
   }
   
   public void setCheeseType(String type) {
+    cheeseType = type;
   }
   
   public void setDoughShape(String shape) {
