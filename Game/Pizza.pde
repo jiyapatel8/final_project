@@ -57,7 +57,7 @@ class Pizza {
     rand = (int) random(4) + 1;
     toppings = new Topping[rand];
     for (int i=0; i<toppings.length; i++) {
-      toppings[i] = new Topping(toppingArr.remove((int) random(toppingArr.size())), (int) random(10)+1);
+      toppings[i] = new Topping(toppingArr.remove((int) random(toppingArr.size())), (int) random(5)+1);
     }
   }
   

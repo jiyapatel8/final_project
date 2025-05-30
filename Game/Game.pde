@@ -1,7 +1,7 @@
 int totalTime = 20 * 60 * 1000;
 int startTime;
 boolean pressed = false;
-Station[] allStations = {new Dough(), new SauceCheese(), new Oven(), new Toppings(), new CuttingPacking()};
+Station[] allStations = {new Dough(), new SauceCheese(), new Toppings(), new Oven(), new CuttingPacking()};
 int currentStation = -1;
 Pizza pizza = new Pizza();
 ActualPizza pizzaOrder = new ActualPizza();
@@ -109,31 +109,33 @@ void draw() {
       clickedShape = 2;
     }
 
-    if (currentStation == 1 && sauceClicked) {
+    if (currentStation >= 1 && sauceClicked) {
       if (sauceClicked) {
         tint(255, 255);
         image(loadImage("sauceOnPizza.png"), 280, 180, 450, 450);
       }
-      print(pizzaOrder.getCheeseType());
       if (pizzaOrder.getCheeseType().equals("cheddar")) {
         image(loadImage("cheddarOnPizza.png"), 260, 170, 475, 475);
       }
-      else {
-        tint(200);
+      else if (!pizzaOrder.getCheeseType().equals("default")) {
+        tint(255); // FIX THIS TINT
         image(loadImage("cheddarOnPizza.png"), 260, 170, 475, 475);
       }
     }
-    
+    print(currentStation);
     
   }
 }
 
+void mouseDragged() {
+  //if (
+}
+
 void keyPressed() {
   if (key == CODED) {
-    if (keyCode == RIGHT && currentStation < 4) {
+    if (keyCode == RIGHT && currentStation < 4 && currentStation != -1) {
       currentStation = (currentStation + 1) % 5;
       allStations[currentStation].prepare();
-      print(currentStation);
     }
     if (keyCode == LEFT && currentStation > 0) {
       currentStation = (currentStation - 1) % 5;
