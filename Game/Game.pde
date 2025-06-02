@@ -8,6 +8,7 @@ ActualPizza pizzaOrder = new ActualPizza();
 int orderNumber = 1;
 int clickedShape = 0; // 0: nothing, 1: circle, 2: square
 boolean sauceClicked = false;
+String currTopping;
 
 void setup() {
   size(1050, 700);
@@ -78,8 +79,51 @@ void mousePressed() {
       pizzaOrder.setCheeseType("cheddar");
     }
   }
+  
+  if (currentStation == 2) {
+    if (mouseX>50 && mouseX<110 && mouseY>160 && mouseY<220) {
+      currTopping = "pineapple";
+    }
+  }
 }
 
+void mouseDragged() {
+  if (currentStation == 2) {
+    
+  }
+}
+
+void mouseReleased() {
+  if (currentStation == 2) {
+    if (currTopping.equals("pineapple")) {
+      if (inToppingArrList("pineapple")) {
+        
+      }
+      else {
+        pizzaOrder.getToppings().add(new Topping("pineapple", 0));
+        pizzaOrder.getToppings().get(pizzaOrder.getToppings().indexOf("pineapple")).setToppingAmt(1);
+      }
+    }
+  }
+}
+
+boolean inToppingArrList(String topping) {
+  for (int i=0; i<pizzaOrder.getToppings().size(); i++) {
+    if (pizzaOrder.getToppings().get(i).getTopping().equals(topping)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+int amtOf(String topping) {
+  for (int i=0; i<pizzaOrder.getToppings().size(); i++) {
+    if (pizzaOrder.getToppings().get(i).getTopping().equals(topping)) {
+      return true;
+    }
+  }
+  return false;
+}
 
 void draw() {
   if (pressed) {
@@ -125,10 +169,6 @@ void draw() {
     print(currentStation);
     
   }
-}
-
-void mouseDragged() {
-  //if (
 }
 
 void keyPressed() {

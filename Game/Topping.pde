@@ -15,4 +15,7 @@ class Topping {
     return toppingAmt;
   }
   
+  public void setToppingAmt(int amt) {
+    toppingAmt += amt;
+  }
 }

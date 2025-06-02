@@ -7,10 +7,10 @@ class Pizza {
   private int cheeseAmount; // light,medium,extra as well as # of ounces on order instructions
   private int temperature; // in degrees Fareneheit
   private int ovenTime; // in minutes
-  private Topping[] toppings; // pineapple, pepperoni, basil leaves, onions, olives, green peppers, mushrooms
+  private ArrayList<Topping> toppings; // pineapple, pepperoni, basil leaves, onions, olives, green peppers, mushrooms
   private ArrayList<String> toppingArr = new ArrayList<>(Arrays.asList("pineapple", "pepperoni", "basil", "onion", "olive", "green pepper", "mushroom"));
   
-  public Pizza(String doughShape, String cheeseType, int cheeseAmount, int temperature, int ovenTime, Topping[] toppings) {
+  public Pizza(String doughShape, String cheeseType, int cheeseAmount, int temperature, int ovenTime, ArrayList<Topping> toppings) {
     this.doughShape = doughShape;
     this.cheeseType = cheeseType;
     this.cheeseAmount = cheeseAmount;
@@ -56,8 +56,8 @@ class Pizza {
     
     rand = (int) random(4) + 1;
     toppings = new Topping[rand];
-    for (int i=0; i<toppings.length; i++) {
-      toppings[i] = new Topping(toppingArr.remove((int) random(toppingArr.size())), (int) random(5)+1);
+    for (int i=0; i<rand; i++) {
+      toppings.set(i, new Topping(toppingArr.remove((int) random(toppingArr.size())), (int) random(5)+1));
     }
   }
   
@@ -81,12 +81,12 @@ class Pizza {
     return ovenTime;
   }
   
-  public Topping[] getToppings() {
+  public ArrayList<Topping> getToppings() {
     return toppings;
   }
   
   public void addTopping(String topping) {
-    
+    toppings.add(new Topping(topping, 0));
   }
   
   public void setOvenTime(int time) {
