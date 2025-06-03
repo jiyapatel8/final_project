@@ -11,6 +11,7 @@ class Toppings extends Station{
     circle(180, 575, 100);
     circle(80, 645, 100);
     
+    for (int i=0; i<10; i++) {
     tint(255);
     fill(#DBBB8B); // pineapple
     circle(80, 200, 80);
@@ -39,6 +40,6 @@ class Toppings extends Station{
     fill(#898989); // mushroom
     circle(80, 645, 80);
     image(loadImage("mushroom.png"), 50, 620, 60, 60);
-    
+    }
   }
 }

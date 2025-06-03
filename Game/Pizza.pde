@@ -7,10 +7,10 @@ class Pizza {
   private int cheeseAmount; // light,medium,extra as well as # of ounces on order instructions
   private int temperature; // in degrees Fareneheit
   private int ovenTime; // in minutes
-  private ArrayList<Topping> toppings; // pineapple, pepperoni, basil leaves, onions, olives, green peppers, mushrooms
+  private HashMap<String, Integer> toppings; // pineapple, pepperoni, basil leaves, onions, olives, green peppers, mushrooms
   private ArrayList<String> toppingArr = new ArrayList<>(Arrays.asList("pineapple", "pepperoni", "basil", "onion", "olive", "green pepper", "mushroom"));
   
-  public Pizza(String doughShape, String cheeseType, int cheeseAmount, int temperature, int ovenTime, ArrayList<Topping> toppings) {
+  public Pizza(String doughShape, String cheeseType, int cheeseAmount, int temperature, int ovenTime, HashMap<String, Integer> toppings) {
     this.doughShape = doughShape;
     this.cheeseType = cheeseType;
     this.cheeseAmount = cheeseAmount;
@@ -55,9 +55,9 @@ class Pizza {
     ovenTime = rand;
     
     rand = (int) random(4) + 1;
-    toppings = new Topping[rand];
+    toppings = new HashMap<String, Integer>(rand);
     for (int i=0; i<rand; i++) {
-      toppings.set(i, new Topping(toppingArr.remove((int) random(toppingArr.size())), (int) random(5)+1));
+      toppings.put(toppingArr.remove((int) random(toppingArr.size())), (int) random(6)+4);
     }
   }
   
@@ -81,12 +81,17 @@ class Pizza {
     return ovenTime;
   }
   
-  public ArrayList<Topping> getToppings() {
+  public HashMap<String, Integer> getToppings() {
     return toppings;
   }
   
   public void addTopping(String topping) {
-    toppings.add(new Topping(topping, 0));
+   if (toppings.get(topping) == null) {
+     toppings.put(topping, 1);
+   }
+   else {
+     toppings.put(topping, toppings.get(topping) + 1);
+   }
   }
   
   public void setOvenTime(int time) {
@@ -94,7 +99,7 @@ class Pizza {
   }
   
   public void setTemperature(int temp) {
-    temperature = temp;
+    temperature += temp;
   }
   
   public void addCheeseAmount(int amt) {

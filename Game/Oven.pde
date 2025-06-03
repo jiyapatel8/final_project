@@ -1,7 +1,7 @@
 class Oven extends Station{
   void prepare() {
     background(loadImage("fire.jpg"));
-    image(loadImage("oven.png"), 50, 50, 50, 50);
+    image(loadImage("oven.jpg"), 0, 0, 850, 700);
     super.prepare();
   }
 }

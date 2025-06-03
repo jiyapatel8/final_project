@@ -16,8 +16,10 @@ class Station {
     text("Shape: " + pizza.getDoughShape(), 810, 286);
     text("Cheese: " + pizza.getCheeseType() + " X " + pizza.getCheeseAmount() + " oz", 810, 330);
     text("Oven: " + pizza.getOvenTime() + " minutes at " + pizza.getTemperature() + "°", 810, 374);
-    for (int i=0; i<pizza.getToppings().length; i++) {
-      text(pizza.getToppings()[i].getTopping() + " X " + pizza.getToppings()[i].getToppingAmt(), 810, 380 + ((i+1)*44) - 6);
+    int i = 0;
+    for (String topping: pizza.getToppings().keySet()) {
+      text(pizza.getToppings().get(topping) + " X " + topping, 810, 380 + ((i+1)*44) - 6);
+      i++;
     }
     //text("Slices: " , 810, 594);
   }

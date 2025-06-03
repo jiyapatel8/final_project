@@ -1,3 +1,6 @@
+import java.util.Map;
+import garciadelcastillo.dashedlines.*;
+
 int totalTime = 20 * 60 * 1000;
 int startTime;
 boolean pressed = false;
@@ -9,6 +12,12 @@ int orderNumber = 1;
 int clickedShape = 0; // 0: nothing, 1: circle, 2: square
 boolean sauceClicked = false;
 String currTopping;
+boolean pressed2 = false;
+DashedLines dash;
+boolean cut = false, cut2 = false;
+int x, y, x2, y2;
+int count = 0;
+boolean both = false;
 
 void setup() {
   size(1050, 700);
@@ -21,6 +30,9 @@ void setup() {
       }
     }
   }
+
+  dash = new DashedLines(this);
+  
 
   fill(#BC1B20); // dark red
   rect(225, 150, 550, 375);
@@ -60,22 +72,23 @@ void mousePressed() {
       }
   }
   if (currentStation==1) {
+    print(mouseX +" " + mouseY);
     if (mouseX>40 && mouseX<240 && mouseY>100 && mouseY<300) {
       sauceClicked = true;
     }
     if (mouseX>35 && mouseX<210 && mouseY>345 && mouseY<400) {
       pizzaOrder.setCheeseType("mozzarella");
     }
-    if (mouseX>35 && mouseX<210 && mouseY>405 && mouseY<460) {
+    else if (mouseX>35 && mouseX<210 && mouseY>405 && mouseY<460) {
       pizzaOrder.setCheeseType("provolone");
     }
-    if (mouseX>35 && mouseX<210 && mouseY>465 && mouseY<520) {
+    else if (mouseX>35 && mouseX<210 && mouseY>465 && mouseY<520) {
       pizzaOrder.setCheeseType("parmesan");
     }
-    if (mouseX>35 && mouseX<210 && mouseY>525 && mouseY<580) {
+    else if (mouseX>35 && mouseX<210 && mouseY>525 && mouseY<580) {
       pizzaOrder.setCheeseType("ricotta");
     }
-    if (mouseX>35 && mouseX<210 && mouseY>585 && mouseY<640) {
+    else if (mouseX>35 && mouseX<210 && mouseY>585 && mouseY<640) {
       pizzaOrder.setCheeseType("cheddar");
     }
   }
@@ -84,59 +97,57 @@ void mousePressed() {
     if (mouseX>50 && mouseX<110 && mouseY>160 && mouseY<220) {
       currTopping = "pineapple";
     }
+    else if (mouseX>150 && mouseX<210 && mouseY>240 && mouseY<300) {
+      currTopping = "pepperoni";
+    }
+    else if (mouseX>50 && mouseX<110 && mouseY>315 && mouseY<375) {
+      currTopping = "basil";
+    }
+    else if (mouseX>150 && mouseX<210 && mouseY>400 && mouseY<460) {
+      currTopping = "onion";
+    }
+    else if (mouseX>50 && mouseX<110 && mouseY>480 && mouseY<540) {
+      currTopping = "olive";
+    }
+    else if (mouseX>150 && mouseX<210 && mouseY>550 && mouseY<610) {
+      currTopping = "greenPepper";
+    }
+    else if (mouseX>50 && mouseX<110 && mouseY>620 && mouseY<680) {
+      currTopping = "mushroom";
+    }
+    pressed2 = true;
+  }
+  
+  if (currentStation == 4 && count == 0) {
+    x = mouseX;
+    y = mouseY;
+    cut = true;
+    count++;
+  }
+  if (currentStation == 4 && count == 1) {
+    x2 = mouseX;
+    y2 = mouseY;
+    cut2 = true;
+    count++;
+    print("h");
   }
 }
 
 void mouseDragged() {
-  if (currentStation == 2) {
-    
+  if (currentStation == 2 && pressed2) {
+     
   }
 }
+
 
 void mouseReleased() {
   if (currentStation == 2) {
-    if (currTopping.equals("pineapple")) {
-      if (inToppingArrList("pineapple")) {
-        
-      }
-      else {
-        pizzaOrder.getToppings().add(new Topping("pineapple", 0));
-        pizzaOrder.getToppings().get(pizzaOrder.getToppings().indexOf("pineapple")).setToppingAmt(1);
-      }
-    }
-  }
-}
 
-boolean inToppingArrList(String topping) {
-  for (int i=0; i<pizzaOrder.getToppings().size(); i++) {
-    if (pizzaOrder.getToppings().get(i).getTopping().equals(topping)) {
-      return true;
-    }
   }
-  return false;
-}
-
-int amtOf(String topping) {
-  for (int i=0; i<pizzaOrder.getToppings().size(); i++) {
-    if (pizzaOrder.getToppings().get(i).getTopping().equals(topping)) {
-      return true;
-    }
-  }
-  return false;
 }
 
 void draw() {
   if (pressed) {
-    int timeLeft = totalTime - (millis() - startTime);
-    int seconds = (timeLeft / 1000) % 60;
-    int minutes = (timeLeft / (1000 * 60)) % 60;
-    strokeWeight(2);
-    stroke(0);
-    fill(255);
-    rect(width/2 - 100, 25, 200, 50, 28);
-    textSize(40);
-    fill(0);
-    text(nf(minutes, 2) + ":" + nf(seconds, 2), width/2 - 45, 63);
 
     if ((pizzaOrder.getDoughShape().equals("circular") && clickedShape != 1 && currentStation==0) || (pizzaOrder.getDoughShape().equals("circular") && currentStation != 0)) {
       allStations[currentStation].prepare();
@@ -166,8 +177,50 @@ void draw() {
         image(loadImage("cheddarOnPizza.png"), 260, 170, 475, 475);
       }
     }
-    print(currentStation);
+  
+    if (currentStation == 3) {
+      strokeWeight(2);
+      stroke(0);
+      fill(#6F6F6F);
+      rect(10, 10, 150, 50, 28);
+      textSize(40);
+      fill(0);
+      text("-   " + pizzaOrder.getTemperature() + "   +", 15, 50);
+      
+      strokeWeight(2);
+      stroke(0);
+      fill(#6F6F6F);
+      rect(180, 10, 150, 50, 28);
+      textSize(40);
+      fill(0);
+      text("-   " + pizzaOrder.getOvenTime() + "   +", 215, 50);
+    }
     
+    int timeLeft = totalTime - (millis() - startTime);
+    int seconds = (timeLeft / 1000) % 60;
+    int minutes = (timeLeft / (1000 * 60)) % 60;
+    strokeWeight(2);
+    stroke(0);
+    fill(255);
+    rect(width/2 - 100, 25, 200, 50, 28);
+    textSize(40);
+    fill(0);
+    text(nf(minutes, 2) + ":" + nf(seconds, 2), width/2 - 45, 63);
+    
+    if (currentStation == 4) {
+      dash.pattern(20, 10);
+      if (cut && !both) {
+        dash.line(500, 150, x, y);
+        dash.line(300, 300, mouseX, mouseY);
+      }
+      else if (!cut && !both) {
+        dash.line(500, 150, mouseX, mouseY);
+      }
+      else if (cut2 && !both) {
+        dash.line(300, 300, x2, y2);
+        both = true;
+      }
+    }
   }
 }
 
@@ -180,6 +233,14 @@ void keyPressed() {
     if (keyCode == LEFT && currentStation > 0) {
       currentStation = (currentStation - 1) % 5;
       allStations[currentStation].prepare();
+    }
+    if (currentStation == 3) {
+      if (key == '+') {
+        pizzaOrder.setTemperature(1);
+      }
+      if (key == '-') {
+        pizzaOrder.setTemperature(-1);
+      }
     }
   }
 }
