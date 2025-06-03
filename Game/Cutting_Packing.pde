@@ -6,5 +6,7 @@ class CuttingPacking extends Station{
     image(loadImage("box.png"), 100, 0, 800, 700);
     
     dash.pattern(20, 10);
+    
+    
   }
 }

@@ -1,7 +1,7 @@
 import java.util.Map;
 import garciadelcastillo.dashedlines.*;
 
-int totalTime = 20 * 60 * 1000;
+int totalTime = 10 * 60 * 1000;
 int startTime;
 boolean pressed = false;
 Station[] allStations = {new Dough(), new SauceCheese(), new Toppings(), new Oven(), new CuttingPacking()};
@@ -216,11 +216,22 @@ void draw() {
       else if (!cut && !both) {
         dash.line(500, 150, mouseX, mouseY);
       }
-      else if (cut2 && !both) {
+      if (cut2 && !both) {
         dash.line(300, 300, x2, y2);
         both = true;
       }
+      if (both) {
+        text("Finished!", 100, 350);
+        text("Your total score is: " + getScorePercentage(), 100, 350);
+      }
     }
+  }
+}
+
+int getScorePercentage() { //dough shape, has sauce?, correct cheese, correct toppings, correct toppings amount, temp, time, extra time left
+  int totalScore = 5 + ;
+  if (!(pizzaOrder.getDoughShape().equals(pizza.getDoughShape()))) {
+    totalScore -= 1;
   }
 }
 
