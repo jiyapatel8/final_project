@@ -16,10 +16,24 @@ boolean pressed2 = false;
 DashedLines dash;
 boolean cut = false, cut2 = false;
 int x, y, x2, y2;
-int count = 0;
 boolean both = false;
 int minutes;
 boolean gameFinished = false;
+float ax, ay, bx, by, cx, cy, dx, dy, ex, ey, fx, fy, gx, gy;
+ax = 50;
+ay = 160;
+bx = 150;
+by = 240;
+cx = 50;
+cy = 315;
+dx = 150;
+dy = 400;
+ex = 50;
+ey = 480;
+fx = 150;
+fy = 550;
+gx = 50;
+gy = 620;
 
 void setup() {
   size(1050, 700);
@@ -34,7 +48,6 @@ void setup() {
   }
 
   dash = new DashedLines(this);
-  
 
   fill(#BC1B20); // dark red
   rect(225, 150, 550, 375);
@@ -120,6 +133,21 @@ void mousePressed() {
     pressed2 = true;
   }
   
+  if (currentStation == 3) {
+    if (mouseX>10 && mouseX<30 && mouseY>10 && mouseY<60) {
+      pizzaOrder.setTemperature(-1);
+    }
+    if (mouseX>130 && mouseX<150 && mouseY>10 && mouseY<60) {
+      pizzaOrder.setTemperature(1);
+    }
+    if (mouseX>180 && mouseX<220 && mouseY>10 && mouseY<60) {
+      pizzaOrder.setOvenTime(-1);
+    }
+    if (mouseX>290 && mouseX<330 && mouseY>10 && mouseY<60) {
+      pizzaOrder.setOvenTime(1);
+    }
+  }
+  
   if (currentStation == 4 && !cut) {
     x = mouseX;
     y = mouseY;
@@ -135,7 +163,34 @@ void mousePressed() {
 
 void mouseDragged() {
   if (currentStation == 2 && pressed2) {
-     
+     if (currTopping.equals("pineapple")) {
+       ax = mouseX;
+       ay = mouseY;
+     }
+     if (currTopping.equals("pepperoni")) {
+       bx = mouseX;
+       by = mouseY;
+     }
+     if (currTopping.equals("basil")) {
+       cx = mouseX;
+       cy = mouseY;
+     }
+     if (currTopping.equals("onion")) {
+       dx = mouseX;
+       dy = mouseY;
+     }
+     if (currTopping.equals("olive")) {
+       ex = mouseX;
+       ey = mouseY;
+     }
+     if (currTopping.equals("green pepper")) {
+       fx = mouseX;
+       fy = mouseY;
+     }
+     if (currTopping.equals("mushroom")) {
+       gx = mouseX;
+       gy = mouseY;
+     }
   }
 }
 
@@ -177,6 +232,37 @@ void draw() {
         image(loadImage("cheddarOnPizza.png"), 260, 170, 475, 475);
       }
     }
+    
+    if (currentStation == 2) {
+      tint(255);
+      fill(#DBBB8B); // pineapple
+      circle(80, 200, 80);
+      image(loadImage("pineapple.png"), ax, ay, 60, 60);
+      
+      fill(#A26B71); // pepperoni
+      circle(180, 275, 80);
+      image(loadImage("pepperoni.png"), bx, by, 60, 60);
+      
+      fill(#849B82); // basil
+      circle(80, 350, 80);
+      image(loadImage("basil.png"), cx, cy, 60, 60);
+      
+      fill(#96829B); // onion
+      circle(180, 425, 80);
+      image(loadImage("onion.png"), dx, dy, 60, 60);
+    
+      fill(#5A595A); // olive
+      circle(80, 500, 80);
+      image(loadImage("olive.png"), ex, ey, 60, 60);
+    
+      fill(#8D9B82); // green pepper
+      circle(180, 575, 80);
+      image(loadImage("greenPepper.png"), fx, fy, 60, 60);
+    
+      fill(#898989); // mushroom
+      circle(80, 645, 80);
+      image(loadImage("mushroom.png"), gx, gy, 60, 60);
+    }
   
     if (currentStation == 3) {
       strokeWeight(2);
@@ -193,7 +279,7 @@ void draw() {
       rect(180, 10, 150, 50, 28);
       textSize(40);
       fill(0);
-      text("-   " + pizzaOrder.getOvenTime() + "   +", 215, 50);
+      text("-   " + pizzaOrder.getOvenTime() + "   +", 205, 50);
     }
     
     int timeLeft = 0;
