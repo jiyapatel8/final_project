@@ -1,7 +1,7 @@
 import java.util.Map;
 import garciadelcastillo.dashedlines.*;
 
-int totalTime = 10 * 60 * 1000;
+int totalTime = 5 * 60 * 1000;
 int startTime;
 boolean pressed = false;
 Station[] allStations = {new Dough(), new SauceCheese(), new Toppings(), new Oven(), new CuttingPacking()};
@@ -18,6 +18,8 @@ boolean cut = false, cut2 = false;
 int x, y, x2, y2;
 int count = 0;
 boolean both = false;
+int minutes;
+boolean gameFinished = false;
 
 void setup() {
   size(1050, 700);
@@ -118,18 +120,16 @@ void mousePressed() {
     pressed2 = true;
   }
   
-  if (currentStation == 4 && count == 0) {
+  if (currentStation == 4 && !cut) {
     x = mouseX;
     y = mouseY;
     cut = true;
-    count++;
   }
-  if (currentStation == 4 && count == 1) {
+  else if (currentStation == 4 && !cut2) {
     x2 = mouseX;
     y2 = mouseY;
     cut2 = true;
-    count++;
-    print("h");
+    both = true;
   }
 }
 
@@ -196,9 +196,13 @@ void draw() {
       text("-   " + pizzaOrder.getOvenTime() + "   +", 215, 50);
     }
     
-    int timeLeft = totalTime - (millis() - startTime);
-    int seconds = (timeLeft / 1000) % 60;
-    int minutes = (timeLeft / (1000 * 60)) % 60;
+    int timeLeft = 0;
+    int seconds = 0;
+    if (!gameFinished) {
+    timeLeft = totalTime - (millis() - startTime);
+    seconds = (timeLeft / 1000) % 60;
+    minutes = (timeLeft / (1000 * 60)) % 60;
+    }
     strokeWeight(2);
     stroke(0);
     fill(255);
@@ -209,30 +213,68 @@ void draw() {
     
     if (currentStation == 4) {
       dash.pattern(20, 10);
-      if (cut && !both) {
-        dash.line(500, 150, x, y);
-        dash.line(300, 300, mouseX, mouseY);
-      }
-      else if (!cut && !both) {
+      if (!cut && !cut2) {
         dash.line(500, 150, mouseX, mouseY);
       }
-      if (cut2 && !both) {
-        dash.line(300, 300, x2, y2);
-        both = true;
+      if (cut) {
+        dash.line(500, 150, x, y);
+      }
+      if (cut && !cut2) {
+        dash.line(260, 390, mouseX, mouseY);
+      }
+      if (cut2) {
+        dash.line(260, 390, x2, y2);
       }
       if (both) {
-        text("Finished!", 100, 350);
-        text("Your total score is: " + getScorePercentage(), 100, 350);
+        text("Finished!", 25, 100);
+        text("Your total score is: " + getScorePercentage(), 25, 130);
+        gameFinished = true;
+        dash.line(500, 150, x, y);
+        dash.line(260, 390, x2, y2);
       }
     }
   }
 }
 
-int getScorePercentage() { //dough shape, has sauce?, correct cheese, correct toppings, correct toppings amount, temp, time, extra time left
-  int totalScore = 5 + ;
-  if (!(pizzaOrder.getDoughShape().equals(pizza.getDoughShape()))) {
-    totalScore -= 1;
+double getScorePercentage() { //dough shape, has sauce?, correct cheese, correct toppings, correct toppings amount, temp, time, extra time left
+  double totalScore = 10 + pizza.getToppings().size();
+  double actualScore = 0;
+  int totalToppingsAmount1;
+  /*
+  for (Integer each : pizza.getToppings().values()) {
+    totalScore += each;
+    totalToppingsAmount1 += each;
   }
+  */
+  actualScore = totalScore;
+  if (!(pizzaOrder.getDoughShape().equals(pizza.getDoughShape()))) {
+    actualScore -= 1;
+  }
+  if (!sauceClicked) {
+    actualScore -= 1;
+  }
+  if (pizza.getCheeseType() != pizzaOrder.getCheeseType()) {
+    actualScore -= 1;
+  }
+  if (pizza.getOvenTime() != pizzaOrder.getOvenTime()) {
+    actualScore -= 1;
+  }
+  if (pizza.getTemperature() != pizzaOrder.getTemperature()) {
+    actualScore -= 1;
+  }
+  if (minutes > 3) {
+    actualScore -= 1;
+  }
+  /*
+  int totalToppingAmt;
+  for (Integer each : pizzaOrder.getToppings().values()) {
+    totalToppingAmt += each;
+  }
+  if (pizza.getToppings().size() != pizzaOrder.getToppings().size()) {
+    actualScore -= abs(pizzaOrder.getToppings().size() - pizza.getToppings().size());
+  }
+  */
+  return round((float) actualScore/ (float) totalScore) * 100;
 }
 
 void keyPressed() {
