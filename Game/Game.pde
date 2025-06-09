@@ -19,21 +19,14 @@ int x, y, x2, y2;
 boolean both = false;
 int minutes;
 boolean gameFinished = false;
-float ax, ay, bx, by, cx, cy, dx, dy, ex, ey, fx, fy, gx, gy;
-ax = 50;
-ay = 160;
-bx = 150;
-by = 240;
-cx = 50;
-cy = 315;
-dx = 150;
-dy = 400;
-ex = 50;
-ey = 480;
-fx = 150;
-fy = 550;
-gx = 50;
-gy = 620;
+
+ArrayList<PVector> pineapples = new ArrayList<PVector>();
+ArrayList<PVector> pepperonis = new ArrayList<PVector>();
+ArrayList<PVector> basils = new ArrayList<PVector>();
+ArrayList<PVector> onions = new ArrayList<PVector>();
+ArrayList<PVector> olives = new ArrayList<PVector>();
+ArrayList<PVector> greenPeppers = new ArrayList<PVector>();
+ArrayList<PVector> mushrooms = new ArrayList<PVector>();
 
 void setup() {
   size(1050, 700);
@@ -67,7 +60,6 @@ void setup() {
   fill(#0E742A);
   textSize(55);
   text("PLAY", 440, 495);
-
 }
 
 void mousePressed() {
@@ -125,7 +117,7 @@ void mousePressed() {
       currTopping = "olive";
     }
     else if (mouseX>150 && mouseX<210 && mouseY>550 && mouseY<610) {
-      currTopping = "greenPepper";
+      currTopping = "green pepper";
     }
     else if (mouseX>50 && mouseX<110 && mouseY>620 && mouseY<680) {
       currTopping = "mushroom";
@@ -146,6 +138,9 @@ void mousePressed() {
     if (mouseX>290 && mouseX<330 && mouseY>10 && mouseY<60) {
       pizzaOrder.setOvenTime(1);
     }
+    if (mouseX>100 && mouseX<250 && mouseY>70 && mouseY<120) {
+      //ADD ANIMATION
+    }
   }
   
   if (currentStation == 4 && !cut) {
@@ -161,43 +156,32 @@ void mousePressed() {
   }
 }
 
-void mouseDragged() {
-  if (currentStation == 2 && pressed2) {
-     if (currTopping.equals("pineapple")) {
-       ax = mouseX;
-       ay = mouseY;
-     }
-     if (currTopping.equals("pepperoni")) {
-       bx = mouseX;
-       by = mouseY;
-     }
-     if (currTopping.equals("basil")) {
-       cx = mouseX;
-       cy = mouseY;
-     }
-     if (currTopping.equals("onion")) {
-       dx = mouseX;
-       dy = mouseY;
-     }
-     if (currTopping.equals("olive")) {
-       ex = mouseX;
-       ey = mouseY;
-     }
-     if (currTopping.equals("green pepper")) {
-       fx = mouseX;
-       fy = mouseY;
-     }
-     if (currTopping.equals("mushroom")) {
-       gx = mouseX;
-       gy = mouseY;
-     }
-  }
-}
-
-
 void mouseReleased() {
-  if (currentStation == 2) {
-
+  if (currentStation == 2 && currTopping != null) {
+    PVector finalPlace = new PVector(mouseX, mouseY);
+    if (currTopping.equals("pineapple")) {
+      pineapples.add(finalPlace);
+    } 
+    else if (currTopping.equals("pepperoni")) {
+      pepperonis.add(finalPlace);
+    } 
+    else if (currTopping.equals("basil")) {
+      basils.add(finalPlace);
+    } 
+    else if (currTopping.equals("onion")) {
+      onions.add(finalPlace);
+    } 
+    else if (currTopping.equals("olive")) {
+      olives.add(finalPlace);
+    } 
+    else if (currTopping.equals("green pepper")) {
+      greenPeppers.add(finalPlace);
+    } 
+    else if (currTopping.equals("mushroom")) {
+      mushrooms.add(finalPlace);
+    }
+    pressed2 = false;
+    currTopping = null;
   }
 }
 
@@ -233,35 +217,52 @@ void draw() {
       }
     }
     
-    if (currentStation == 2) {
-      tint(255);
-      fill(#DBBB8B); // pineapple
-      circle(80, 200, 80);
-      image(loadImage("pineapple.png"), ax, ay, 60, 60);
+    if (currentStation >= 2) {
+      for (PVector each: pineapples) {
+        image(loadImage("pineapple.png"), each.x, each.y, 60, 60);
+      }
+      for (PVector each: pepperonis) {
+        image(loadImage("pepperoni.png"), each.x, each.y, 60, 60);
+      }
+      for (PVector each: basils) {
+        image(loadImage("basil.png"), each.x, each.y, 60, 60);
+      }
+      for(PVector each: onions) {
+        image(loadImage("onion.png"), each.x, each.y, 60, 60);
+      }
+      for (PVector each: olives) {
+        image(loadImage("olive.png"), each.x, each.y, 60, 60);
+      }
+      for (PVector each: greenPeppers) {
+        image(loadImage("greenPepper.png"), each.x, each.y, 60, 60);
+      }
+      for (PVector each: mushrooms) {
+        image(loadImage("mushroom.png"), each.x, each.y, 60, 60);
+      }
       
-      fill(#A26B71); // pepperoni
-      circle(180, 275, 80);
-      image(loadImage("pepperoni.png"), bx, by, 60, 60);
-      
-      fill(#849B82); // basil
-      circle(80, 350, 80);
-      image(loadImage("basil.png"), cx, cy, 60, 60);
-      
-      fill(#96829B); // onion
-      circle(180, 425, 80);
-      image(loadImage("onion.png"), dx, dy, 60, 60);
-    
-      fill(#5A595A); // olive
-      circle(80, 500, 80);
-      image(loadImage("olive.png"), ex, ey, 60, 60);
-    
-      fill(#8D9B82); // green pepper
-      circle(180, 575, 80);
-      image(loadImage("greenPepper.png"), fx, fy, 60, 60);
-    
-      fill(#898989); // mushroom
-      circle(80, 645, 80);
-      image(loadImage("mushroom.png"), gx, gy, 60, 60);
+      if (currTopping != null && pressed2) {
+        if (currTopping.equals("pineapple")) {
+          image(loadImage("pineapple.png"), mouseX, mouseY, 60, 60);
+        } 
+        else if (currTopping.equals("pepperoni")) {
+          image(loadImage("pepperoni.png"), mouseX, mouseY, 60, 60);
+        } 
+        else if (currTopping.equals("basil")) {
+          image(loadImage("basil.png"), mouseX, mouseY, 60, 60);
+        } 
+        else if (currTopping.equals("onion")) {
+          image(loadImage("onion.png"), mouseX, mouseY, 60, 60);
+        } 
+        else if (currTopping.equals("olive")) {
+          image(loadImage("olive.png"), mouseX, mouseY, 60, 60);
+        } 
+        else if (currTopping.equals("green pepper")) {
+          image(loadImage("greenPepper.png"), mouseX, mouseY, 60, 60);
+        } 
+        else if (currTopping.equals("mushroom")) {
+          image(loadImage("mushroom.png"), mouseX, mouseY, 60, 60);
+        }
+      }
     }
   
     if (currentStation == 3) {
@@ -280,6 +281,14 @@ void draw() {
       textSize(40);
       fill(0);
       text("-   " + pizzaOrder.getOvenTime() + "   +", 205, 50);
+      
+      strokeWeight(2);
+      stroke(0);
+      fill(#6F6F6F);
+      rect(100, 70, 150, 50, 28);
+      textSize(25);
+      fill(0);
+      text("START OVEN", 110, 105);
     }
     
     int timeLeft = 0;
