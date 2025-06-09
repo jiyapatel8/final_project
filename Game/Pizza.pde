@@ -95,7 +95,7 @@ class Pizza {
   }
   
   public void setOvenTime(int time) {
-    if ((ovenTime >= 0 && time > 0) || (ovenTime > 0 && time < 0)) {
+    if ((ovenTime >= 1 && time > 0) || (ovenTime > 1 && time < 0)) {
       ovenTime += time;
     }
   }

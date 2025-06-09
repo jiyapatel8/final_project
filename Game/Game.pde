@@ -19,6 +19,7 @@ int x, y, x2, y2;
 boolean both = false;
 int minutes;
 boolean gameFinished = false;
+boolean ovenStarted = false;
 
 ArrayList<PVector> pineapples = new ArrayList<PVector>();
 ArrayList<PVector> pepperonis = new ArrayList<PVector>();
@@ -139,7 +140,7 @@ void mousePressed() {
       pizzaOrder.setOvenTime(1);
     }
     if (mouseX>100 && mouseX<250 && mouseY>70 && mouseY<120) {
-      //ADD ANIMATION
+      ovenStarted = true;
     }
   }
   
@@ -190,14 +191,24 @@ void draw() {
 
     if ((pizzaOrder.getDoughShape().equals("circular") && clickedShape != 1 && currentStation==0) || (pizzaOrder.getDoughShape().equals("circular") && currentStation != 0)) {
       allStations[currentStation].prepare();
-      fill(#E3E5D5);
+      if (ovenStarted) {
+        fill(#B48583);
+      }
+      else {
+        fill(#E3E5D5);
+      }
       noStroke();
       circle(500, 400, 500);
       clickedShape = 1;
     }
     else if ((pizzaOrder.getDoughShape().equals("sicilian") && clickedShape != 2 && currentStation==0) || (pizzaOrder.getDoughShape().equals("sicilian") && currentStation != 0)) {
       allStations[currentStation].prepare();
-      fill(#E3E5D5);
+      if (ovenStarted) {
+        fill(#B48583);
+      }
+      else {
+        fill(#E3E5D5);
+      }
       noStroke();
       square(250, 150, 500);
       clickedShape = 2;
@@ -381,14 +392,6 @@ void keyPressed() {
     if (keyCode == LEFT && currentStation > 0) {
       currentStation = (currentStation - 1) % 5;
       allStations[currentStation].prepare();
-    }
-    if (currentStation == 3) {
-      if (key == '+') {
-        pizzaOrder.setTemperature(1);
-      }
-      if (key == '-') {
-        pizzaOrder.setTemperature(-1);
-      }
     }
   }
 }
