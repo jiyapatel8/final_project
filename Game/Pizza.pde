@@ -4,16 +4,14 @@ import java.util.ArrayList;
 class Pizza {
   private String doughShape;
   private String cheeseType;
-  private int cheeseAmount; // light,medium,extra as well as # of ounces on order instructions
   private int temperature; // in degrees Fareneheit
   private int ovenTime; // in minutes
   private HashMap<String, Integer> toppings; // pineapple, pepperoni, basil leaves, onions, olives, green peppers, mushrooms
   private ArrayList<String> toppingArr = new ArrayList<>(Arrays.asList("pineapple", "pepperoni", "basil", "onion", "olive", "green pepper", "mushroom"));
   
-  public Pizza(String doughShape, String cheeseType, int cheeseAmount, int temperature, int ovenTime, HashMap<String, Integer> toppings) {
+  public Pizza(String doughShape, String cheeseType, int temperature, int ovenTime, HashMap<String, Integer> toppings) {
     this.doughShape = doughShape;
     this.cheeseType = cheeseType;
-    this.cheeseAmount = cheeseAmount;
     this.temperature = temperature;
     this.ovenTime = ovenTime;
     this.toppings = toppings;
@@ -45,9 +43,6 @@ class Pizza {
       cheeseType = "ricotta";
     }
     
-    rand = (int) random(10) + 1;
-    cheeseAmount = rand;
-    
     rand = (int) random(150) + 401;
     temperature = rand;
     
@@ -67,10 +62,6 @@ class Pizza {
   
   public String getCheeseType() {
     return cheeseType;
-  }
-  
-  public int getCheeseAmount() {
-    return cheeseAmount;
   }
   
   public int getTemperature() {
@@ -102,10 +93,6 @@ class Pizza {
   
   public void setTemperature(int temp) {
     temperature += temp;
-  }
-  
-  public void addCheeseAmount(int amt) {
-    cheeseAmount = amt;
   }
   
   public void setCheeseType(String type) {

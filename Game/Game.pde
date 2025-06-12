@@ -1,25 +1,26 @@
 import java.util.Map;
 import garciadelcastillo.dashedlines.*;
 
-int totalTime = 5 * 60 * 1000;
-int startTime;
-boolean pressed = false;
 Station[] allStations = {new Dough(), new SauceCheese(), new Toppings(), new Oven(), new CuttingPacking()};
 int currentStation = -1;
 Pizza pizza = new Pizza();
 ActualPizza pizzaOrder = new ActualPizza();
-int orderNumber = 1;
+String currTopping;
 int clickedShape = 0; // 0: nothing, 1: circle, 2: square
 boolean sauceClicked = false;
-String currTopping;
 boolean pressed2 = false;
 DashedLines dash;
 boolean cut = false, cut2 = false;
 int x, y, x2, y2;
 boolean both = false;
 int minutes;
-boolean gameFinished = false;
 boolean ovenStarted = false;
+int totalTime = 2 * 60 * 1000;
+int startTime;
+boolean pressed = false;
+boolean gameFinished = false;
+boolean finishedButton = false;
+boolean showInstructions = false;
 
 ArrayList<PVector> pineapples = new ArrayList<PVector>();
 ArrayList<PVector> pepperonis = new ArrayList<PVector>();
@@ -61,9 +62,22 @@ void setup() {
   fill(#0E742A);
   textSize(55);
   text("PLAY", 440, 495);
+  
+  fill(#E3E5D5);
+  stroke(#BC1B20);
+  strokeWeight(3);
+  circle(1000, 650, 70);
+  fill(#0E742A);
+  text("?", 990, 670);
 }
 
 void mousePressed() {
+  if (currentStation ==-1 && mouseX>975 && mouseX<1050 && mouseY>625 && mouseY<750) {
+    showInstructions = true;
+  }
+  if (currentStation ==-1 && mouseX>740 && mouseX<760 && mouseY>150 && mouseY<175) {
+    showInstructions = false;
+  }
   if (currentStation ==-1 && mouseX>350 && mouseX < 650 && mouseY>450 && mouseY<500) {
       pressed = true;
       startTime = millis();
@@ -76,27 +90,25 @@ void mousePressed() {
       }
       else if (mouseX>25 && mouseX<175 && mouseY>450 && mouseY<600) {
         pizzaOrder.setDoughShape("sicilian");
-        print("i clicked");
       }
   }
   if (currentStation==1) {
-    print(mouseX +" " + mouseY);
     if (mouseX>40 && mouseX<240 && mouseY>100 && mouseY<300) {
       sauceClicked = true;
     }
-    if (mouseX>35 && mouseX<210 && mouseY>345 && mouseY<400) {
+    if (mouseX>35 && mouseX<210 && mouseY>345 && mouseY<400 && sauceClicked) {
       pizzaOrder.setCheeseType("mozzarella");
     }
-    else if (mouseX>35 && mouseX<210 && mouseY>405 && mouseY<460) {
+    else if (mouseX>35 && mouseX<210 && mouseY>405 && mouseY<460 && sauceClicked) {
       pizzaOrder.setCheeseType("provolone");
     }
-    else if (mouseX>35 && mouseX<210 && mouseY>465 && mouseY<520) {
+    else if (mouseX>35 && mouseX<210 && mouseY>465 && mouseY<520 && sauceClicked) {
       pizzaOrder.setCheeseType("parmesan");
     }
-    else if (mouseX>35 && mouseX<210 && mouseY>525 && mouseY<580) {
+    else if (mouseX>35 && mouseX<210 && mouseY>525 && mouseY<580 && sauceClicked) {
       pizzaOrder.setCheeseType("ricotta");
     }
-    else if (mouseX>35 && mouseX<210 && mouseY>585 && mouseY<640) {
+    else if (mouseX>35 && mouseX<210 && mouseY>585 && mouseY<640 && sauceClicked) {
       pizzaOrder.setCheeseType("cheddar");
     }
   }
@@ -155,31 +167,41 @@ void mousePressed() {
     cut2 = true;
     both = true;
   }
+  if (currentStation == 4 && both && mouseX>25 && mouseX<325 && mouseY>100 && mouseY<150) {
+    finishedButton = true;
+  }
 }
 
 void mouseReleased() {
-  if (currentStation == 2 && currTopping != null) {
+  if (currentStation == 2 && currTopping != null && mouseX>280 && mouseX<730 && mouseY>180 && mouseY<630) {
     PVector finalPlace = new PVector(mouseX, mouseY);
     if (currTopping.equals("pineapple")) {
       pineapples.add(finalPlace);
+      pizzaOrder.addTopping("pineapple");
     } 
     else if (currTopping.equals("pepperoni")) {
       pepperonis.add(finalPlace);
+      pizzaOrder.addTopping("pepperoni");
     } 
     else if (currTopping.equals("basil")) {
       basils.add(finalPlace);
+      pizzaOrder.addTopping("basil");
     } 
     else if (currTopping.equals("onion")) {
       onions.add(finalPlace);
+      pizzaOrder.addTopping("onion");
     } 
     else if (currTopping.equals("olive")) {
       olives.add(finalPlace);
+      pizzaOrder.addTopping("olive");
     } 
     else if (currTopping.equals("green pepper")) {
       greenPeppers.add(finalPlace);
+      pizzaOrder.addTopping("green pepper");
     } 
     else if (currTopping.equals("mushroom")) {
       mushrooms.add(finalPlace);
+      pizzaOrder.addTopping("mushroom");
     }
     pressed2 = false;
     currTopping = null;
@@ -187,12 +209,61 @@ void mouseReleased() {
 }
 
 void draw() {
+  if (!pressed && showInstructions) {
+    fill(#E3E5D5);
+    rect(225, 150, 550, 375, 28);
+    fill(0);
+    textSize(20);
+    text("X", 750, 175);
+    text("Instructions: ", 230, 175);
+    text("1. Select pizza shape: circular or sicilian (square)", 230, 200);
+    text("2. Put sauce and correct cheese", 230, 225);
+    text("3. Add correct toppings and amount by pressing, dragging, and ", 230, 250);
+    text("releasing mouse", 250, 275);
+    text("4. Adjust oven temperature/time by clicking the + and - and start", 230, 300);
+    text("5. Cut pizza by clicking on the other end of the pizza", 230, 325);
+    text("6. When finished before time runs out, click the button FINISHED ", 230, 350);
+    text("to get score", 250, 375);
+    text("Other: ", 230, 425);
+    text(" - pizza will turn darker after starting oven but very dark if burnt", 230, 450);
+    text(" - toppings cannot/will not be placed outside the area the pizza is", 230, 475);
+  }
+  if (!pressed && !showInstructions) {
+    fill(#BC1B20); // dark red
+  rect(225, 150, 550, 375);
+  shapeMode(CENTER);
+
+  textSize(125);
+  fill(#E3E5D5); // beige
+  stroke(#0E742A); // dark green
+  text("Jiya's", 350, 275);
+
+  textSize(100);
+  text("PIZZERIA", 300, 400);
+
+  fill(#E3E5D5);
+  rect(350, 450, 300, 50, 28);
+
+  fill(#0E742A);
+  textSize(55);
+  text("PLAY", 440, 495);
+  
+  fill(#E3E5D5);
+  stroke(#BC1B20);
+  strokeWeight(3);
+  circle(1000, 650, 70);
+  fill(#0E742A);
+  text("?", 990, 670);
+  }
   if (pressed) {
 
     if ((pizzaOrder.getDoughShape().equals("circular") && clickedShape != 1 && currentStation==0) || (pizzaOrder.getDoughShape().equals("circular") && currentStation != 0)) {
       allStations[currentStation].prepare();
-      if (ovenStarted) {
+      if (ovenStarted && (pizzaOrder.getTemperature() > pizza.getTemperature() || pizzaOrder.getOvenTime() > pizza.getOvenTime()))  {
         fill(#B48583);
+      }
+      else if (ovenStarted)  {
+        fill(#E5CFBE);
       }
       else {
         fill(#E3E5D5);
@@ -203,8 +274,11 @@ void draw() {
     }
     else if ((pizzaOrder.getDoughShape().equals("sicilian") && clickedShape != 2 && currentStation==0) || (pizzaOrder.getDoughShape().equals("sicilian") && currentStation != 0)) {
       allStations[currentStation].prepare();
-      if (ovenStarted) {
+      if (ovenStarted && (pizzaOrder.getTemperature() > pizza.getTemperature() || pizzaOrder.getOvenTime() > pizza.getOvenTime()))  {
         fill(#B48583);
+      }
+      else if (ovenStarted) {
+        fill(#E5CFBE);
       }
       else {
         fill(#E3E5D5);
@@ -223,8 +297,7 @@ void draw() {
         image(loadImage("cheddarOnPizza.png"), 260, 170, 475, 475);
       }
       else if (!pizzaOrder.getCheeseType().equals("default")) {
-        tint(255); // FIX THIS TINT
-        image(loadImage("cheddarOnPizza.png"), 260, 170, 475, 475);
+        image(loadImage("cheeseOnPizza.png"), 260, 170, 475, 475);
       }
     }
     
@@ -316,82 +389,113 @@ void draw() {
     textSize(40);
     fill(0);
     text(nf(minutes, 2) + ":" + nf(seconds, 2), width/2 - 45, 63);
+    if (minutes <= 0 && seconds <= 0) {
+      gameFinished = true;
+      text("Finished!", 25, 100);
+      text("Your total score is: " + getScorePercentage(), 25, 140);
+    }
     
-    if (currentStation == 4) {
+    if (currentStation == 4 && clickedShape > 0) {
       dash.pattern(20, 10);
       if (!cut && !cut2) {
         dash.line(500, 150, mouseX, mouseY);
       }
       if (cut) {
+        fill(0);
         dash.line(500, 150, x, y);
       }
       if (cut && !cut2) {
+        fill(0);
         dash.line(260, 390, mouseX, mouseY);
       }
       if (cut2) {
+        fill(0);
         dash.line(260, 390, x2, y2);
       }
       if (both) {
-        text("Finished!", 25, 100);
-        text("Your total score is: " + getScorePercentage(), 25, 130);
-        gameFinished = true;
+        if (!finishedButton) {
+          fill(#E3E5D5);
+          stroke(#0E742A);
+          rect(25, 100, 300, 50, 28);
+          fill(#0E742A);
+          textSize(55);
+          text("FINISHED?", 45, 143);
+        }
+        if (finishedButton) {
+          fill(#0E742A);
+          text("Finished!", 25, 100);
+          text("Your total score is: " + getScorePercentage(), 25, 130);
+          gameFinished = true;
+        }
+        fill(0);
         dash.line(500, 150, x, y);
         dash.line(260, 390, x2, y2);
       }
-    }
+    } 
   }
 }
 
-double getScorePercentage() { //dough shape, has sauce?, correct cheese, correct toppings, correct toppings amount, temp, time, extra time left
-  double totalScore = 10 + pizza.getToppings().size();
+String getScorePercentage() { //dough shape, has sauce?, correct cheese, correct toppings, correct toppings amount, temp, time, extra time left
+  double totalScore = 6 + (2 * pizza.getToppings().size());
   double actualScore = 0;
-  int totalToppingsAmount1;
-  /*
-  for (Integer each : pizza.getToppings().values()) {
-    totalScore += each;
-    totalToppingsAmount1 += each;
+  int totalToppingsAmount1 = 0;
+  for (Integer eachVal : pizza.getToppings().values()) { 
+    totalScore += eachVal;
+    totalToppingsAmount1 += eachVal;
   }
-  */
   actualScore = totalScore;
-  if (!(pizzaOrder.getDoughShape().equals(pizza.getDoughShape()))) {
+  if (!(pizzaOrder.getDoughShape().equals(pizza.getDoughShape()))) { //dough shape
     actualScore -= 1;
   }
-  if (!sauceClicked) {
+  if (!sauceClicked) { // has sauce?
     actualScore -= 1;
   }
-  if (pizza.getCheeseType() != pizzaOrder.getCheeseType()) {
+  if (pizza.getCheeseType() != pizzaOrder.getCheeseType()) { // correct cheese
     actualScore -= 1;
   }
-  if (pizza.getOvenTime() != pizzaOrder.getOvenTime()) {
+  if (pizza.getOvenTime() != pizzaOrder.getOvenTime()) { // time
     actualScore -= 1;
   }
-  if (pizza.getTemperature() != pizzaOrder.getTemperature()) {
+  if (pizza.getTemperature() != pizzaOrder.getTemperature()) { // temp
     actualScore -= 1;
   }
-  if (minutes > 3) {
+  if (!finishedButton) { // extra time?
     actualScore -= 1;
   }
-  /*
-  int totalToppingAmt;
-  for (Integer each : pizzaOrder.getToppings().values()) {
-    totalToppingAmt += each;
+  
+  int totalToppingAmt = 0;
+  for (Integer eachVal : pizzaOrder.getToppings().values()) { // correct total toppings amount
+    totalToppingAmt += eachVal;
   }
-  if (pizza.getToppings().size() != pizzaOrder.getToppings().size()) {
+  if (totalToppingAmt != totalToppingsAmount1) {
+    actualScore -= abs(totalToppingAmt - totalToppingsAmount1);
+  }
+  if (pizza.getToppings().size() != pizzaOrder.getToppings().size()) { // number of topping type
     actualScore -= abs(pizzaOrder.getToppings().size() - pizza.getToppings().size());
   }
-  */
-  return round((float) actualScore/ (float) totalScore) * 100;
+  for (String eachKey : pizza.getToppings().keySet()) { 
+    if (!(pizzaOrder.getToppings().containsKey(eachKey))) { // correct toppings type
+      actualScore -= 1;
+    }
+    else if (pizza.getToppings().get(eachKey) != pizzaOrder.getToppings().get(eachKey)) { // correct toppings amount for each type
+      actualScore -= abs(pizza.getToppings().get(eachKey) - pizzaOrder.getToppings().get(eachKey));
+    }
+  }
+  
+  return (int) round(((float) actualScore/ (float) totalScore) * 100) + "%";
 }
 
 void keyPressed() {
-  if (key == CODED) {
+  if (key == CODED && !gameFinished) {
     if (keyCode == RIGHT && currentStation < 4 && currentStation != -1) {
       currentStation = (currentStation + 1) % 5;
       allStations[currentStation].prepare();
+      currTopping = null;
     }
     if (keyCode == LEFT && currentStation > 0) {
       currentStation = (currentStation - 1) % 5;
       allStations[currentStation].prepare();
+      currTopping = null;
     }
   }
 }
